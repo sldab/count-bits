@@ -2,45 +2,104 @@
 
 PostgreSQL extension providing simple functions for counting bits:
 
-- `count_common_bits`:
+- `common_1bits`:
 
-  Counts the common bits in two 64 bit integers.
+  Counts the common 1-bits in two 64 bit integers.
 
-  Example:
-  `count_common_bits(5,7)` will return `2`.
-  ```
-  5: 0000000000000000000000000000000000000000000000000000000000000101
-  7: 0000000000000000000000000000000000000000000000000000000000000111
-  ```
-- `count_unique_bits`:
+  __Examples__:
 
-  Counts the unique bits in two 64 bit integers.
+      common_1bits(5,7) = 2
+
+      5: 0000000000000000000000000000000000000000000000000000000000000101
+      7: 0000000000000000000000000000000000000000000000000000000000000111
+
+      common_1bits(7,8) = 0
+
+      7: 0000000000000000000000000000000000000000000000000000000000000111
+      8: 0000000000000000000000000000000000000000000000000000000000001000
+
+- `unique_1bits`:
+
+  Counts the unique 1-bits in two 64 bit integers.
   This is also known as the Hamming distance.
 
-  Example:
-  `count_common_bits(5,7)` will return `1`.
+  __Examples__:
+
+      unique_1bits(5,7) = 1
+      unique_1bits(7,8) = 4
+
+- `leading_common_1bits`:
+
+  Counts the leading common 1-bits in two 64 bit integers.
+
+  __Examples__:
+
+      leading_common_1bits(5,7) = 0
+      leading_common_1bits(7,8) = 0
+
+- `leading_unique_1bits`:
+
+  Counts the leading unique 1-bits in two 64 bit integers.
+
+  __Examples__:
+
+      leading_unique_1bits(5,7) = 0
+      leading_unique_1bits(7,8) = 0
+
+- `trailing_common_1bits`:
+
+  Counts the trailing common 1-bits in two 64 bit integers.
+
+  __Examples__:
+
+      trailing_common_1bits(5,7) = 1
+      trailing_common_1bits(7,8) = 0
+
+- `trailing_unique_1bits`:
+
+  Counts the trailing unique 1-bits in two 64 bit integers.
+
+  __Examples__:
+
+      trailing_unique_1bits(5,7) = 0
+      trailing_unique_1bits(7,8) = 4
 
 ## Implementation
 
-The implementation relies on the `__builtin_popcountll` intrinsic available
-in gcc and clang. `-march=native` is passed as a compile option. This will
-use the `popcntq` instruction on newer CPUs for best performance.
+The implementation relies on the `__builtin_popcountll` and `__builtin_ctzll`
+intrinsics available in gcc and clang.
 
-Caution: Be sure to compile on the same CPU type as you are going to use in
-your production system or change the `-march` parameter to a broader option.
+`__builtin_popcountll` will use the efficient `popcntq` (popcount quick)
+instruction if available and your target architecture and `__builtin_ctzll` will
+use `bsfq` (bit scan forward quick).
 
 ## Installation
 
 The PostgreSQL headers `postgres.h` and `fmgr.h` must be available for
-compilation. They can be found in the `libpq-dev` package on Debian/Ubuntu or in
-`postgresql-libs` on RedHat/CentOS.
+compilation. They can be found in the `libpq-dev` package on Debian/Ubuntu or in `postgresql-libs` on RedHat/CentOS. Also the `pg_config` binary must be available.
 
-Also the `pg_config` binary must be available.
-
-Install the functions to your database with:
+Compile the shared library:
 
 ```
-PGDATABASE=<database name> make install
+make
 ```
-The shared library will be copied to your PostgreSQL location for dynamically
-loadable modules determined by running `pg_config --pkglibdir`.
+
+You may want to run `objdump -d count_bits.so` to make sure that the `popcntq`
+instruction will be used for best performance.
+If it isn't, try compiling with `make CFLAGS='-march=native'`.
+Caution: The code may not run on other CPUs.
+
+Next, install it to your PostgreSQL location for dynamically loadable modules.
+You'll most likely need to be root to do this.
+
+```
+make install
+```
+
+Run the following to make all functions available in your database.
+You'll most likely need to do this as the postgres user or as a user with the
+necessary rights to access the database.
+
+```
+PGDATABASE=<database name> make create_functions
+```
