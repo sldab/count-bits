@@ -70,7 +70,7 @@ The implementation relies on the `__builtin_popcountll` and `__builtin_ctzll`
 intrinsics available in gcc and clang.
 
 `__builtin_popcountll` will use the efficient `popcntq` (popcount quick)
-instruction if available and your target architecture and `__builtin_ctzll` will
+instruction if available on your target architecture and `__builtin_ctzll` will
 use `bsfq` (bit scan forward quick).
 
 ## Installation
@@ -85,8 +85,8 @@ make
 ```
 
 You may want to run `objdump -d count_bits.so` to make sure that the `popcntq`
-instruction will be used for best performance.
-If it isn't, try compiling with `make CFLAGS='-march=native'`.
+instruction was used for best performance.
+If it wasn't, try compiling with `make CFLAGS='-march=native'`.
 Caution: The code may not run on other CPUs.
 
 Next, install it to your PostgreSQL location for dynamically loadable modules.
