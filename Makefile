@@ -30,9 +30,11 @@ create_functions: install
 		$(call CREATE_FUNCTION,common_1bits) \
 		$(call CREATE_FUNCTION,unique_1bits) \
 		$(call CREATE_FUNCTION,leading_common_1bits) \
-		$(call CREATE_FUNCTION,leading_unique_1bits) \
 		$(call CREATE_FUNCTION,trailing_common_1bits) \
-		$(call CREATE_FUNCTION,trailing_unique_1bits)"
+		$(call CREATE_FUNCTION,leading_common_bits) \
+		$(call CREATE_FUNCTION,leading_unique_bits) \
+		$(call CREATE_FUNCTION,trailing_common_bits) \
+		$(call CREATE_FUNCTION,trailing_unique_bits)"
 
 uninstall: drop_functions
 	rm -f $(PKGLIBDIR)/count_bits.so
@@ -42,9 +44,11 @@ drop_functions:
 		$(call DROP_FUNCTION,common_1bits) \
 		$(call DROP_FUNCTION,unique_1bits) \
 		$(call DROP_FUNCTION,leading_common_1bits) \
-		$(call DROP_FUNCTION,leading_unique_1bits) \
 		$(call DROP_FUNCTION,trailing_common_1bits) \
-		$(call DROP_FUNCTION,trailing_unique_1bits)"
+		$(call DROP_FUNCTION,leading_common_bits) \
+		$(call DROP_FUNCTION,leading_unique_bits) \
+		$(call DROP_FUNCTION,trailing_common_bits) \
+		$(call DROP_FUNCTION,trailing_unique_bits)"
 
 clean:
 	rm -f *.so *.o

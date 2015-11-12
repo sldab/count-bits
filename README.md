@@ -37,15 +37,6 @@ PostgreSQL extension providing simple functions for counting bits:
       leading_common_1bits(5,7) = 0
       leading_common_1bits(7,8) = 0
 
-- `leading_unique_1bits`:
-
-  Counts the leading unique 1-bits in two 64 bit integers.
-
-  __Examples__:
-
-      leading_unique_1bits(5,7) = 0
-      leading_unique_1bits(7,8) = 0
-
 - `trailing_common_1bits`:
 
   Counts the trailing common 1-bits in two 64 bit integers.
@@ -55,14 +46,42 @@ PostgreSQL extension providing simple functions for counting bits:
       trailing_common_1bits(5,7) = 1
       trailing_common_1bits(7,8) = 0
 
-- `trailing_unique_1bits`:
+- `leading_common_bits`:
 
-  Counts the trailing unique 1-bits in two 64 bit integers.
+  Counts the leading common bits in two 64 bit integers.
 
   __Examples__:
 
-      trailing_unique_1bits(5,7) = 0
-      trailing_unique_1bits(7,8) = 4
+      leading_common_bits(5,7) = 62
+      leading_common_bits(7,8) = 60
+
+
+- `leading_unique_bits`:
+
+  Counts the leading unique bits in two 64 bit integers.
+
+  __Examples__:
+
+      leading_unique_bits(5,7) = 0
+      leading_unique_bits(7,8) = 0
+
+- `trailing_common_bits`:
+
+  Counts the trailing common bits in two 64 bit integers.
+
+  __Examples__:
+
+      trailing_common_bits(5,7) = 1
+      trailing_common_bits(7,8) = 0
+
+- `trailing_unique_bits`:
+
+  Counts the trailing unique bits in two 64 bit integers.
+
+  __Examples__:
+
+      trailing_unique_bits(5,7) = 0
+      trailing_unique_bits(7,8) = 4
 
 ## Implementation
 
